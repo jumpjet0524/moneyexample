@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:moneyexample/widget/user_transaction.dart';
 
 import './widget/new_transaction.dart';
 import './models/transaction.dart';
+import './widget/chart.dart';
 import './widget/transation_list.dart';
 
 void main() => runApp(const MyApp());
@@ -14,6 +14,15 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter App',
+      theme: ThemeData(
+        appBarTheme: AppBarTheme(
+            titleTextStyle: TextStyle(
+                fontFamily: 'OpenSans',
+                fontSize: 20,
+                fontWeight: FontWeight.bold)),
+        colorScheme: ColorScheme.fromSwatch(primarySwatch: Colors.purple)
+            .copyWith(secondary: Colors.amber),
+      ),
       home: MyHomePage(),
     );
   }
@@ -30,19 +39,29 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   final List<Transaction> _userTransactions = [
-    Transaction(
-      id: 't1',
-      title: 'New Shoes',
-      amount: 69.99,
-      date: DateTime.now(),
-    ),
-    Transaction(
-      id: 't2',
-      title: 'Weekly Groceries',
-      amount: 16.53,
-      date: DateTime.now(),
-    ),
+    // Transaction(
+    //   id: 't1',
+    //   title: 'New Shoes',
+    //   amount: 69.99,
+    //   date: DateTime.now(),
+    // ),
+    // Transaction(
+    //   id: 't2',
+    //   title: 'Weekly Groceries',
+    //   amount: 16.53,
+    //   date: DateTime.now(),
+    // ),
   ];
+
+  List<Transaction>? get _recentTransactions {
+    return _userTransactions.where((tx) {
+      return tx.date!.isAfter(
+        DateTime.now().subtract(
+          Duration(days: 7),
+        ),
+      );
+    }).toList();
+  }
 
   void _addNewTransaction(String title, double amount) {
     final newTx = Transaction(
@@ -61,8 +80,9 @@ class _MyHomePageState extends State<MyHomePage> {
       context: ctx,
       builder: (bCtx) {
         return GestureDetector(
-          onTap: (){},
+          onTap: () {},
           child: NewTransaction(_addNewTransaction),
+          behavior: HitTestBehavior.opaque,
         );
       },
     );
@@ -78,7 +98,7 @@ class _MyHomePageState extends State<MyHomePage> {
             onPressed: () {
               _startAddNewTransaction(context);
             },
-            icon: Icon(Icons.add),
+            icon: const Icon(Icons.add),
           )
         ],
       ),
@@ -87,14 +107,7 @@ class _MyHomePageState extends State<MyHomePage> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Container(
-              width: double.infinity,
-              child: const Card(
-                color: Colors.blue,
-                child: Text('CHART!'),
-                elevation: 50,
-              ),
-            ),
+            Chart(_recentTransactions!),
             TransactionList(_userTransactions),
           ],
         ),
