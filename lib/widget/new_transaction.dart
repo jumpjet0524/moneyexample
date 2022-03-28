@@ -13,11 +13,11 @@ class _NewTransactionState extends State<NewTransaction> {
   final titleController = TextEditingController();
   final amountController = TextEditingController();
 
-  void submitData(){
+  void submitData() {
     final enterTitle = titleController.text;
     final enterAmount = double.parse(amountController.text);
 
-    if (enterTitle.isEmpty || enterAmount<=0){
+    if (enterTitle.isEmpty || enterAmount <= 0) {
       return;
     }
 
@@ -41,7 +41,7 @@ class _NewTransactionState extends State<NewTransaction> {
             TextField(
               decoration: const InputDecoration(labelText: 'title'),
               controller: titleController,
-              onSubmitted: (_)=>submitData(),
+              onSubmitted: (_) => submitData(),
               // onChanged: (val) {
               //   // titleInput = val;
               // },
@@ -50,16 +50,27 @@ class _NewTransactionState extends State<NewTransaction> {
               decoration: const InputDecoration(labelText: 'amount'),
               controller: amountController,
               keyboardType: TextInputType.number,
-              onSubmitted: (_)=>submitData(),
+              onSubmitted: (_) => submitData(),
               // onChanged: (val) {
               //   // amountInput = val;
               // },
             ),
-            TextButton(
-              child: const Text('add Transaction'),
-              //style: TextButton.styleFrom(primary: Colors.purple),
-              onPressed: submitData
-            )
+            Container(
+              height: 70,
+              child: Row(
+                children: [
+                  Text('No Date Chosen!'),
+                  TextButton(
+                    style: TextButton.styleFrom(primary: Colors.purple),
+                    onPressed: () {},
+                    child: Text('Choose Date'),
+                  )
+                ],
+              ),
+            ),
+            ElevatedButton(
+                child: const Text('add Transaction'),
+                onPressed: submitData)
           ],
         ),
       ),
